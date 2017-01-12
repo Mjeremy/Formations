@@ -1,0 +1,96 @@
+
+/* premier enfant du conteneur*/
+/*p:first-child
+{
+    color:green;
+}*/
+
+/*p {
+    color:red;
+    font-size: 20px;
+    font-family: Helvetica, Arial, serif;  d'abord heletica, si pas, test arial, si pas serif
+    
+    text-align: center;
+    
+    color: rgba(0,0,255,a); a: alpha opacité, transparence. 0 --> transparent / 1 --> coloré
+    
+    font-size: 1em taille normal de la police, 2em : 2 fois plus grand 
+    
+    
+    Police css
+        serif
+        sans-serif
+        cursive
+    
+}*/
+
+#p1{
+    display: block; /*Par défaut, élément doit aller à la ligne après un autre élément*/
+    background-color: yellow;
+}
+
+#p2
+{
+    display: inline;
+    background-color: red;
+}
+
+#p3
+{
+    display: inline-block; /*display: none --> rien qui s'affiche*/
+    background-color: green;
+    width: 600px;
+}
+
+h1 
+{    
+    color: blue;   
+}
+
+/*classe pouvant être appliquée à n'importe quel tag*/
+.special
+{
+    color:orange;
+}
+
+/*Via id du tag*/
+#unique
+{
+    font-size: 80px;
+}
+
+/* ******PSEUDO-CLASS********* */
+
+/*Quand on a pas encore cliqué*/
+a:link
+{
+  color:orange;  
+}
+
+/*Quand on a visité le site*/
+a:visited
+{
+    color:green;
+}
+
+/*Quand on passe la souris dessus*/
+a:hover
+{
+    color:blue;
+}
+
+/* **************************** */
+
+/*Imbriquation, seul les p dans 2 div seront touchés
+div div p
+{
+    font-size: 15px;
+    color: grey;
+    text-align: left;
+}
+
+Tout les tags seront touchés
+*
+{
+    border: 2px solid black;
+}*/
