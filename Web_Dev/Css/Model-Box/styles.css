@@ -1,0 +1,72 @@
+.red {
+    background-color: red;
+    width: 200px;
+    height: 400px;
+    /*margin: 50px 30px 20px 80px; haut droite bas gauche */
+    /*margin: 50px 30px; gauche droite 50 haut bas 30*/
+    /*margin: 50px; même partout*/
+    /*margin: 50px auto; auto : partage l'espace disponible*/
+    margin: 50px 100px;
+    border-style: solid;
+    border-color: greenyellow;
+    border-width: 5px;
+    /*border: 10px solid green;*/ 
+    padding: 50px;
+}
+
+.blue {
+    background-color: blue;
+    width: 200px;
+    height: 400px;
+    
+}
+
+.left
+{
+    height: 450px; 
+    width: 200px;
+    background-color: orange;
+    /*float: left;*/
+} 
+
+.right
+{
+    height: 300px;
+    width: 150px;
+    background-color: green;
+    /*float: right;*/
+}
+
+.green
+{
+    height: 200px;
+    width: 400px;
+    background-color: green;
+    position: relative;
+    top: 50px;
+    left: 150px;
+}
+
+.orange
+{
+    height: 200px;
+    width: 400px;
+    background-color: orange;
+    position: static;
+    /* position absolute top left ... se positionne par rapport au premier parent qui a 
+    une position non static*/
+}
+
+header
+{
+    height: 100px;
+    background-color: grey;
+
+}
+
+footer
+{
+    height: 100px;
+    background-color: aqua;
+    clear: left; /*prend en compte les éléments flotants à gauche*/
+}
