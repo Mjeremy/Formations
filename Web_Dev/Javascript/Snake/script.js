@@ -4,9 +4,11 @@ window.onload = function()
     var canvasHeight = 600;
     var blockSize = 30;
     var ctx;
-    var delay = 500; //millisec
+    var delay = 300; //millisec
     var snakee;
     var applee;
+    var widthInBlock = canvasWidht / blockSize;
+    var heightInBlock = canvasHeight / blockSize;
     
     init();
     
@@ -26,16 +28,26 @@ window.onload = function()
     
     function refreshCanvas()
     {
-        ctx.clearRect(0, 0, canvasWidht, canvasHeight);
-        
-        snakee.draw();
-        try{
-            snakee.advance();
-            applee.draw();
-            setTimeout(refreshCanvas,delay);
-        }catch(err){
-            console.log("PERDU");
+        snakee.advance();
+        if(snakee.checkCollision())
+        {
+                
         }
+        else
+        {
+            if(snakee.isEatingApple(applee))
+                {
+                    do{
+                        applee.setNewPosition();
+                    }while(applee.isOnSnake(snakee))
+                    
+                }
+            ctx.clearRect(0, 0, canvasWidht, canvasHeight);
+            snakee.draw();
+            applee.draw();
+            setTimeout(refreshCanvas,delay); 
+        }
+
     }
     
     function Snake(body, direction)
@@ -50,8 +62,7 @@ window.onload = function()
                 {
                     drawBlock(ctx, this.body[i]);
                 }
-            ctx.restore();
-                                
+            ctx.restore();                       
         };
         
         this.advance = function()
@@ -77,14 +88,6 @@ window.onload = function()
             this.body.unshift(nextPos); //ajoute à la première place
             this.body.pop();
             
-            if((this.body[0][0]*blockSize > canvasWidht) 
-                || (this.body[0][1]*blockSize > canvasHeight)
-                || (this.body[0][0]*blockSize < 0)
-                || (this.body[0][1]*blockSize < 0)
-              )
-            {
-                throw("Serpent en dehors du canvas");
-            }
         };
         
         this.setDirection = function (newDirection)
@@ -114,7 +117,44 @@ window.onload = function()
         {
             var wallColision = false;
             var snakeColision = false;
-        }
+            
+            var head = this.body[0];
+            var rest = this.body.slice(1);
+            var snakeX = head[0];
+            var snakeY = head[1];
+            var minX = 0;
+            var minY = 0;
+            var maxX = widthInBlock - 1;
+            var maxY = heightInBlock - 1;
+            var isNotBetweenHorizWalls = snakeX < minX || snakeX > maxX;
+            var isNotBetweenVertWalls = snakeY < minY || snakeY > maxY;
+            
+            if(isNotBetweenHorizWalls || isNotBetweenVertWalls)
+            {
+                wallColision = true;
+            }
+            
+            for(var i = 0; i < rest.length; i++)
+                {
+                    if((snakeX === rest[i][0]) && (snakeY === rest[i][1]))
+                       {
+                            snakeColision = true;
+                       }
+                }
+            
+            return wallColision || snakeColision;
+        };
+        
+        this.isEatingApple = function(appleToEat)
+        {
+            var head = this.body[0];
+            
+            if(head[0] === appleToEat.position[0] && head[1] === appleToEat.position[1])
+
+                    return true;
+            else    
+                    return false;
+        };
     }
     
     
@@ -127,11 +167,33 @@ window.onload = function()
             ctx.fillStyle = "#33cc33";
             ctx.beginPath();
             var radius = blockSize/2;
-            var x = position[0]*blockSize + radius;
-            var y = position[1]*blockSize + radius;
+            var x = this.position[0]*blockSize + radius;
+            var y = this.position[1]*blockSize + radius;
             ctx.arc(x,y, radius, 0, Math.PI*2, true);
             ctx.fill();
             ctx.restore();
+        };
+        
+        this.setNewPosition = function()
+        {
+            var newX = Math.round(Math.random() * (widthInBlock -1)); 
+            var newY = Math.round(Math.random() * (heightInBlock -1));
+            this.position = [newX, newY];
+        }; 
+        
+        this.isOnSnake = function(snakeToCheck)
+        {
+            var isOnSnake = false;
+            for(var i =0; i < snakeToCheck.body.length; i++)
+                {
+                    if(this.position[0] === snakeToCheck.body[i][0]
+                      && this.position[1] === snakeToCheck.body[i][1])
+                        {
+                            isOnSnake = true;
+                        }
+                }
+            
+            return isOnSnake;
         };
     }
     
