@@ -1,6 +1,6 @@
 angular.module("Webmail", ["ngSanitize"])
 
-.controller("WebmailCtrl", function($scope, $location){
+.controller("WebmailCtrl", function($scope, $location, $filter){
     
     $scope.dossiers = [
         { value: "RECEPTION", label: 'Boite de Réception', emails: [
@@ -27,6 +27,8 @@ angular.module("Webmail", ["ngSanitize"])
         
     ];
     
+    $scope.idProchainMail = 13;
+    
     $scope.dossierCourant = null;
     $scope.emailSelectionne = null;
     
@@ -35,13 +37,18 @@ angular.module("Webmail", ["ngSanitize"])
     };
     
     $scope.selectionDossier = function(dossier){
-        $scope.dossierCourant=dossier;
+        $scope.dossierCourant = dossier;
         $scope.emailSelectionne = null;
+        if(dossier){
+            $scope.nouveauMail = null;
+        }
     };
     
     $scope.selectionEmail = function(email){
         $scope.emailSelectionne = email;
     };
+    
+    //tri
     
     $scope.champsTri = null;
     $scope.descendant = false;
@@ -61,35 +68,80 @@ angular.module("Webmail", ["ngSanitize"])
               'glyphicon-chevron-down': $scope.champsTri == champ && $scope.descendant}
     };
     
+    //recherche
     
     $scope.recherche = null;
     $scope.razRecherche = function(){
         $scope.recherche = null;
     };
     
+    //creation nouveau mail
+    
+    $scope.nouveauMail = null;
+    $scope.razMail = function(){
+        $scope.nouveauMail = {
+            from: "Jérémy",
+            date: new Date()
+        };
+    };
+    
+    //envoie nouveau mail
+    $scope.envoieMail = function(){
+        $scope.dossiers.forEach(function(item){
+            if(item.value == "ENVOYES"){
+                $scope.nouveauMail.id = $scope.idProchainMail++;
+                item.emails.push($scope.nouveauMail);
+                $scope.nouveauMail = null;
+                $location.path("/");
+            }
+        })
+    };
+    
+    //navigation
     
     $scope.$watch(function() {
         return $location.path();
     }, function(newPath) {
         var tabPath = newPath.split("/");
         if(tabPath.length > 1) {
-            var valDossier = tabPath[1];
-            $scope.dossiers.forEach(function(item){
-                if(item.value == valDossier){
-                    $scope.selectionDossier(item);
-                }
-            });
-            
-            if(tabPath.length > 2){
-                var idMail = tabPath[2];
-                $scope.dossierCourant.emails.forEach(function(item){
-                    if(item.id == idMail){
-                        $scope.selectionEmail(item);
+            if(tabPath[1] == "nouveauMail"){
+                $scope.razMail(); 
+                $scope.selectionDossier(null);
+            } else {
+                var valDossier = tabPath[1];
+                $scope.dossiers.forEach(function(item){
+                    if(item.value == valDossier){
+                        $scope.selectionDossier(item);
                     }
                 });
+
+                if(tabPath.length > 2){
+                    var idMail = tabPath[2];
+                    $scope.dossierCourant.emails.forEach(function(item){
+                        if(item.id == idMail){
+                            $scope.selectionEmail(item);
+                        }
+                    });
+                }
             }
         }
     });
     
+    $scope.getDossiersFiltres = function(){
+        console.log("getDossiersFiltres()");
+        return $filter("filter")($scope.dossierCourant.emails, $scope.recherche);
+    };
     
+    
+})
+
+.filter("surbrillanceRecherche", function(){
+  return function(input, recherche){
+      if(recherche){
+            return input.replace(new RegExp("(" + recherche + ")", "gi"), "<span class =        'surbrillanceRecherche'>$1</span>");
+      } else {
+            return input;    
+      }
+      
+  }  
 });

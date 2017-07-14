@@ -18,11 +18,21 @@
     <body ng-app="Webmail" ng-controller="WebmailCtrl">
         
         <div class="container">
-        
-            <ul class="nav nav-pills spacer"> 
-                <li ng-repeat="dossier in dossiers"
-                    ng-class="{active: dossier == dossierCourant}"><a href="#{{dossier.value}}">{{dossier.label}}</a></li>
-            </ul>
+            <div class="spacer navbar">
+                <ul class="nav nav-pills navbar-left"> 
+                    <li ng-repeat="dossier in dossiers"
+                        ng-class="{active: dossier == dossierCourant}">
+                        <a href="#{{dossier.value}}">{{dossier.label}}</a>
+                    </li>
+                </ul>
+                
+                <ul class="nav nav-pills navbar-right"> 
+                    <li ng-class="{active: nouveauMail != null}">
+                        <a href="#/nouveauMail"><span class="glyphicon glyphicon-pencil"></span></a></li>
+                </ul>
+                
+            </div>
+            
             
 
             
@@ -67,17 +77,17 @@
                     </thead>
 
                     <tbody>
-                        <tr ng-repeat="email in dossierCourant.emails | filter:recherche | orderBy:champsTri:descendant" class="clickable" ng-click="versEmail(dossierCourant,email)">
-                            <td>{{email.from}}</td>
-                            <td>{{email.to}}</td>
-                            <td>{{email.subject}}</td>
+                        <tr ng-repeat="email in emailsFiltres = (dossierCourant.emails | filter:recherche) | orderBy:champsTri:descendant" class="clickable" ng-click="versEmail(dossierCourant,email)">
+                            <td ng-bind-html="email.from | surbrillanceRecherche:recherche"></td>
+                            <td ng-bind-html="email.to | surbrillanceRecherche:recherche"></td>
+                            <td ng-bind-html="email.subject | surbrillanceRecherche:recherche"></td>
                             <td>{{email.date | date: 'dd/MM/yyyy HH:MM' }}</td>
                         </tr>
 
                     </tbody>
                 </table>
 
-                <div class="alert alert-info">Le dossier contient {{dossierCourant.emails.length}} mails.</div> 
+                <div class="alert alert-info">Le dossier contient {{emailsFiltres.length}} mails.</div> 
             </div>
             
             
@@ -94,10 +104,37 @@
                 
             </div>
             
-            
+            <div class="spacer" ng-show="nouveauMail != null">
+                <form name="formNouveauMail">
+                    <div class="input-group">
+                        <span class="input-group-addon labelChampNouveauMail">&Agrave;</span>
+                        <input type="text" class="form-control" ng-model="nouveauMail.to" />
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon labelChampNouveauMail">Objet</span>
+                        <input type="text" class="form-control" ng-model="nouveauMail.subject"/>
+                    </div>
+
+                    <div class="spacer">
+                        <textarea rows="10" class="contenuNouveauMail" ng-model="nouveauMail.content"></textarea>
+                    </div>
+
+                    <div class="spacer">
+                        <pre>{{nouveauMail | json}}</pre>
+                    </div>
+                    
+                    <div class="spacer text-center">
+                        <button ng-click="envoieMail()" class="btn btn-success">Envoyer l'E-mail</button>
+                        <span class="hspacer"></span>
+                        <button class="btn btn-warning" ng-click="razMail()">Effacer la saisie</button>
+                    </div>
+                </form>
+            </div>
             
         </div>
         
+
         
         <script type="text/javascript" src="http://code.angularjs.org/1.2.15/angular.min.js"></script>
         <script type="text/javascript" src="http://code.angularjs.org/1.2.15/angular-sanitize.min.js"></script>
