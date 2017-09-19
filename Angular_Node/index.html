@@ -27,7 +27,7 @@
                 </ul>
                 
                 <ul class="nav nav-pills navbar-right"> 
-                    <li ng-class="{active: nouveauMail != null}">
+                    <li ng-class="{active: afficherNouveauMail}">
                         <a href="#/nouveauMail"><span class="glyphicon glyphicon-pencil"></span></a></li>
                 </ul>
                 
@@ -91,7 +91,7 @@
             </div>
             
             
-            <div ng-show="emailSelectionne != null" class="spacer">
+            <!--<div ng-show="emailSelectionne != null" class="spacer">
                 <div class="well">
                 
                     <h1>{{emailSelectionne.subject}}</h1>
@@ -102,43 +102,26 @@
                 
                 <p ng-bind-html="emailSelectionne.content"></p>
                 
-            </div>
+            </div>-->
             
-            <div class="spacer" ng-show="nouveauMail != null">
-                <form name="formNouveauMail">
-                    <div class="input-group">
-                        <span class="input-group-addon labelChampNouveauMail">&Agrave;</span>
-                        <input type="text" class="form-control" ng-model="nouveauMail.to" />
-                    </div>
-
-                    <div class="input-group">
-                        <span class="input-group-addon labelChampNouveauMail">Objet</span>
-                        <input type="text" class="form-control" ng-model="nouveauMail.subject"/>
-                    </div>
-
-                    <div class="spacer">
-                        <textarea rows="10" class="contenuNouveauMail" ng-model="nouveauMail.content"></textarea>
-                    </div>
-
-                    <div class="spacer">
-                        <pre>{{nouveauMail | json}}</pre>
-                    </div>
-                    
-                    <div class="spacer text-center">
-                        <button ng-click="envoieMail()" class="btn btn-success">Envoyer l'E-mail</button>
-                        <span class="hspacer"></span>
-                        <button class="btn btn-warning" ng-click="razMail()">Effacer la saisie</button>
-                    </div>
-                </form>
-            </div>
+            <contenu-mail ng-show="emailSelectionne != null" email="emailSelectionne"></contenu-mail>
+            
+            <nouveau-mail ng-show="afficherNouveauMail" envoie-mail="envoieMail(nouveauMail)" ></nouveau-mail>
             
         </div>
         
-
         
+        
+
+        <script type="text/javascript" src="http://code.angularjs.org/1.2.15/angular.min.js"></script>
         <script type="text/javascript" src="http://code.angularjs.org/1.2.15/angular.min.js"></script>
         <script type="text/javascript" src="http://code.angularjs.org/1.2.15/angular-sanitize.min.js"></script>
         <script type="text/javascript" src="http://code.angularjs.org/1.2.15/i18n/angular-locale_fr-fr.js"></script>
-        <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript" src="lib/tinymce/tinymce.min.js"></script>
+        <script type="text/javascript" src="lib/ui-tinymce.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/MesFiltres.js"></script>
+        <script type="text/javascript" src="js/MesDirectives.js"></script>
+        <script type="text/javascript" src="js/MailServiceMock.js"></script>
     </body>
 </html>
