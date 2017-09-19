@@ -6,24 +6,7 @@ angular.module("Webmail", ["ngSanitize", "ui.tinymce", "MailServiceMock", "MesFi
     
     $scope.idProchainMail = 13;
     
-    $scope.dossierCourant = null;
-    $scope.emailSelectionne = null;
-    
-    $scope.versEmail = function(dossier, email){
-        $location.path("/" + dossier.value + "/" + email.id);;  
-    };
-    
-    $scope.selectionDossier = function(valDossier){
-        $scope.dossierCourant = mailService.getDossier(valDossier);
-        $scope.emailSelectionne = null;
-        if(valDossier){
-            $scope.afficherNouveauMail = false;
-        }
-    };
-    
-    $scope.selectionEmail = function(valDossier, idEmail){
-        $scope.emailSelectionne = mailService.getMail(valDossier, idEmail);
-    };
+
     
     //tri
     
@@ -67,28 +50,44 @@ angular.module("Webmail", ["ngSanitize", "ui.tinymce", "MailServiceMock", "MesFi
     
     //navigation
     
+    $scope.vueCourante = null;
+    $scope.dossierCourant = null;
+    $scope.emailSelectionne = null;
+    
+    $scope.versEmail = function(dossier, email){
+        $location.path("/" + dossier.value + "/" + email.id);;  
+    };
+    
+    $scope.selectionDossier = function(valDossier){
+        $scope.vueCourante = "vueDossier";
+        $scope.dossierCourant = mailService.getDossier(valDossier);
+
+    };
+    
+    $scope.selectionEmail = function(valDossier, idEmail){
+        $scope.vueCourante = "vueContenuMail";
+        $scope.emailSelectionne = mailService.getMail(valDossier, idEmail);
+    };
+    
     $scope.$watch(function() {
         return $location.path();
     }, function(newPath) {
         var tabPath = newPath.split("/");
         if(tabPath.length > 1 && tabPath[1]) {
             if(tabPath[1] == "nouveauMail"){
-                $scope.afficherNouveauMail = true;
+                $scope.vueCourante = "vueNouveauMail";
                 $scope.$broadcast("initFormNouveauMail");
-                $scope.selectionDossier(null);
             } else {
                 var valDossier = tabPath[1];
-                $scope.selectionDossier(valDossier);
-                
-
                 if(tabPath.length > 2){
                     var idMail = tabPath[2];
                     $scope.selectionEmail(valDossier, idMail);
+                } else {
+                    $scope.selectionDossier(valDossier);
                 }
             }
         } else {
-            $scope.selectionDossier(null);
-            $scope.afficherNouveauMail = false;
+            $scope.vueCourante = null;
         }
     });
     

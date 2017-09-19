@@ -21,23 +21,20 @@
             <div class="spacer navbar">
                 <ul class="nav nav-pills navbar-left"> 
                     <li ng-repeat="dossier in dossiers"
-                        ng-class="{active: dossier == dossierCourant}">
+                        ng-class="{active: vueCourante == 'vueDossier' && dossier == dossierCourant}">
                         <a href="#{{dossier.value}}">{{dossier.label}}</a>
                     </li>
                 </ul>
                 
                 <ul class="nav nav-pills navbar-right"> 
-                    <li ng-class="{active: afficherNouveauMail}">
+                    <li ng-class="{active: vueCourante == 'vueNouveauMail'}">
                         <a href="#/nouveauMail"><span class="glyphicon glyphicon-pencil"></span></a></li>
                 </ul>
                 
             </div>
             
-            
 
-            
-            
-            <div ng-show="dossierCourant != null &amp;&amp; emailSelectionne == null ">
+            <div ng-show="vueCourante == 'vueDossier'">
                 
                 <div class="spacer input-group">
                     <div class="input-group-addon">
@@ -104,9 +101,9 @@
                 
             </div>-->
             
-            <contenu-mail ng-show="emailSelectionne != null" email="emailSelectionne"></contenu-mail>
+            <contenu-mail ng-show="vueCourante == 'vueContenuMail'" email="emailSelectionne"></contenu-mail>
             
-            <nouveau-mail ng-show="afficherNouveauMail" envoie-mail="envoieMail(nouveauMail)" ></nouveau-mail>
+            <nouveau-mail ng-show="vueCourante == 'vueNouveauMail'" envoie-mail="envoieMail(nouveauMail)" ></nouveau-mail>
             
         </div>
         
